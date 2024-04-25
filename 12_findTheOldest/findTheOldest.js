@@ -1,79 +1,30 @@
 const findTheOldest = function(array) {
-    let currentYear=2024;                       // incase of yearOfDeath absent
-    
-    // lets make an array of people without year of death
+    let currentYear = 2024;
 
-    let personWithoutDateOfDeath= array. filter(person => person.yearOfDeath === "" && person.yearOfDeath === null && typeof(person.yearOfDeath)=== 'undefined');
-   
-    // lets calcuulate their age base on current dates only
+    // Make an array of people without a year of death
+    let personWithoutDateOfDeath = array.filter(person => person.yearOfDeath === "" || person.yearOfDeath === null || typeof person.yearOfDeath === 'undefined');
 
-   // if( personWithoutDateOfDeath.length >0){
-        let ages= personWithoutDateOfDeath.map(age => currentYear- age.yearOfBirth);
-        let indexOfOldestWithoutDate = ages.findIndex(age => age === Math.max(...ages));
-        let oldestPersonWithoutDate = personWithoutDateOfDeath[indexOfOldestWithoutDate];
-    //}
+    // Make an array of people with a year of death
+    let personWithDateOfDeath = array.filter(person => person.yearOfDeath !== "" && person.yearOfDeath !== null && typeof person.yearOfDeath !== 'undefined');
 
-    // lets calculate age of everyone else
+    // Find the oldest person with a year of death
+    // using ternary operator here
+    let oldestPersonWithDate = personWithDateOfDeath.reduce((oldest, current) => 
+                                                        (current.yearOfDeath - current.yearOfBirth) > (oldest.yearOfDeath - oldest.yearOfBirth) ? current : oldest);
 
-    let agesWithDates = array.map(person => person.yearOfDeath - person.yearOfBirth);
-    let indexOfOldestWithDate= agesWithDates.findIndex(age => age === Math.max(...agesWithDates));
-    let oldestPersonWithDate = array[indexOfOldestWithDate];
+    // Check if there are persons without a year of death
+    if (personWithoutDateOfDeath.length > 0) {
+        let oldestPersonWithoutDate = personWithoutDateOfDeath.reduce((oldest, current) =>
+                                                        (currentYear - current.yearOfBirth) > (currentYear - oldest.yearOfBirth) ? current : oldest);
 
-    if(personWithoutDateOfDeath.length>0){
-        if( Math.max(...ages)> Math.max(...agesWithDates))
-            overallOldest= oldestPersonWithoutDate
-        else    
-            overallOldest= oldestPersonWithDate;
+        // Compare the oldest person without a year of death with the oldest person with a year of death
+        if (oldestPersonWithoutDate.yearOfBirth < oldestPersonWithDate.yearOfBirth) {
+            return oldestPersonWithoutDate;
+        }
     }
-    else{
-        let overallOldest= oldestPersonWithDate;
-        return overallOldest;
-    }
-        
-    
-};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   /* if( array.yearOfDeath!=="" && array.yearOfDeath!== null && typeof(array.yearOfDeath) !== 'undefined'){
-
-    let age=array.map(person => person.yearOfDeath - person.yearOfBirth)
-
-    let indexOfOldestAge = age.indexOf(Math.max(...age));
-
-    let oldestPersonWithDate = array[indexOfOldestAge];
     return oldestPersonWithDate;
-    }
-
-    else {
-        let age= array.map(ages => currentYear- ages.yearOfBirth);
-
-        let indexOfOldestAge= age.indexOf(Math.max(...age));
-
-        let oldestPersonWithoutDate = array[indexOfOldestAge];
-        return oldestPersonWithoutDate;
-    }
-*/
+};
 
 // Do not edit below this line
 module.exports = findTheOldest;
